@@ -1,0 +1,63 @@
+<nav class="navbar navbar-default navbar-static-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <span class="navbar-brand">Resource tracker</span>
+        </div>
+
+            <div class="btn-group" uib-dropdown is-open="status.isopen">
+                <button id="category-button" type="button" class="btn btn-primary navbar-btn" uib-dropdown-toggle ng-disabled="disabled">
+                    Category {{selectedCategory}} <span class="caret"></span>
+                </button>
+                <ul uib-dropdown-menu role="menu" aria-labelledby="category-button">
+                    <li role="menuitem" ng-click="categoryClick(gr._id)"><a>- All -</a></li>
+                    <li role="menuitem" ng-repeat="gr in groups" ng-click="categoryClick(gr._id)"><a>{{gr._id}}</a></li>
+                </ul>
+            </div>
+            <div class="btn-group" uib-dropdown>
+                <button id="group-button" type="button" class="btn btn-primary navbar-btn" uib-dropdown-toggle ng-disabled="disabled">
+                    Group {{selectedGroup}} <span class="caret"></span>
+                </button>
+                <ul uib-dropdown-menu role="menu" aria-labelledby="group-button">
+                    <li role="menuitem" ng-click="groupClick(gr._id)"><a>- All -</a></li>
+                    <li role="menuitem" ng-repeat="gr in currentGroup" ng-click="groupClick(gr)"><a>{{gr}}</a></li>
+                </ul>
+            </div>
+            <form class="navbar-form navbar-left navbar-input-group" role="login" ng-if="!loginComplete">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="nickname" ng-model="$parent.loginName">
+                </div>
+                <button type="submit" class="btn btn-default" ng-click="login()"><span class="glyphicon glyphicon-check"></span></button>
+            </form>
+            <ul class="nav navbar-nav navbar-right" ng-if="loginComplete">
+                <li><a ng-click="logout()">{{loginName}} <span class="glyphicon glyphicon-log-out"></span></a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" ng-if="loginComplete">
+                <li><a ng-click="config()">Configuration</a></li>
+            </ul>
+    </div><!-- /.container-fluid -->
+</nav>
+
+<div class="container">
+    <table class="table table-condensed table-striped">
+        <thead></thead>
+        <tbody>
+            <tr ng-repeat='res in resources' ng-class="res.locked ? 'alert alert-danger' : 'alert alert-success'">
+                <td>
+                    <span ng-class="res.locked && 'glyphicon glyphicon-remove text-danger' || 'glyphicon glyphicon-ok text-success'"></span>
+                </td>
+                <td><b>{{res.name}}</b></td>
+                <td>{{res.category}}</td>
+                <td>{{res.group}}</td>
+                <td>{{res.lockedBy}}</td>
+                <td>{{res.updatedAt.toLocaleString()}}</td>
+                <td ng-if="loginComplete">
+                    <button class="btn btn-xs btn-primary" ng-click="switch(res._id)">
+                        <span ng-if="res.locked">release</span>
+                        <span ng-if="!res.locked">lock</span>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
